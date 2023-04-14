@@ -15,86 +15,45 @@
     <div class="row">
         <div class="col-3">
             <h4>Введите первое число</h4>
-            <label>
-                <input type="number" class="form-control" id="input-1">
+            <label for="A">
+                <input type="number" class="form-control" id="A">
             </label>
         </div>
         <div class="col-3">
             <h4>Введите второе число</h4>
-            <label>
-                <input type="number" class="form-control" id="input-2">
+            <label for="B">
+                <input type="number" class="form-control" id="B">
             </label>
         </div>
     </div>
     <br>
-    <button type="submit" class="btn btn-success" id="add">Add</button>
-    <button type="submit" class="btn btn-danger" id="subtract">Subtract</button>
-    <button type="submit" class="btn btn-warning" id="multiply">Multiply</button>
-    <button type="submit" class="btn btn-info" id="divide">Divide</button>
+    <button type="button" class="btn btn-success" id="add" data-action="add">Add</button>
+    <button type="button" class="btn btn-danger" id="subtract" data-action="subtract">Subtract</button>
+    <button type="button" class="btn btn-warning" id="multiply" data-action="multiply">Multiply</button>
+    <button type="button" class="btn btn-info" id="divide" data-action="divide">Divide</button>
+    <br><br>
+    Result: <p id="result"></p>
 </div>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"
+        integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
 <script type="application/javascript">
-    const container = document.getElementById('container');
-
-    const input1 = document.getElementById('input-1');
-    const input2 = document.getElementById('input-2');
-
-    const add = document.getElementById('add');
-    const subtract = document.getElementById('subtract');
-    const multiply = document.getElementById('multiply');
-    const divide = document.getElementById('divide');
-
-    const res = document.createElement('p');
-    res.className = 'result';
-
-    let result = 0;
-
-    add.addEventListener('click', function () {
-        if (isNaN(input1.valueAsNumber) || isNaN(input2.valueAsNumber)) {
-            res.innerText = 'Need to enter numbers!'
-            res.style.color = 'red'
-        } else {
-            result = input1.valueAsNumber + input2.valueAsNumber
-            res.innerText = `Result: ${result}`
-            res.style.color = 'green'
-        }
-        container.append(res)
-    });
-
-    subtract.addEventListener('click', function () {
-        if (isNaN(input1.valueAsNumber) || isNaN(input2.valueAsNumber)) {
-            res.innerText = 'Need to enter numbers!'
-            res.style.color = 'red'
-        } else {
-            result = input1.valueAsNumber - input2.valueAsNumber
-            res.innerText = `Result: ${result}`
-            res.style.color = 'green'
-        }
-        container.append(res)
-    });
-
-    multiply.addEventListener('click', function () {
-        if (isNaN(input1.valueAsNumber) || isNaN(input2.valueAsNumber)) {
-            res.innerText = 'Need to enter numbers!'
-            res.style.color = 'red'
-        } else {
-            result = input1.valueAsNumber * input2.valueAsNumber
-            res.innerText = `Result: ${result}`
-            res.style.color = 'green'
-        }
-        container.append(res)
-    });
-
-    divide.addEventListener('click', function () {
-        if (isNaN(input1.valueAsNumber) || isNaN(input2.valueAsNumber)) {
-            res.innerText = 'Need to enter numbers!'
-            res.style.color = 'red'
-        } else {
-            result = input1.valueAsNumber / input2.valueAsNumber
-            res.innerText = `Result: ${result}`
-            res.style.color = 'green'
-        }
-        container.append(res)
-    });
+    $('.btn').click(function () {
+        $.ajax({
+            method: 'POST',
+            url: $(this).data('action') + '/',
+            data: JSON.stringify({
+                'A': $('#A').val(),
+                'B': $('#B').val()
+            }),
+            success: function (res) {
+                $('#result').html(res.answer).css({'color': 'green', 'display': 'contents'})
+            },
+            error: function () {
+                let msg = 'You entered empty data'
+                $('#result').html(msg).css({'color': 'red', 'display': 'contents'})
+            }
+        })
+    })
 </script>
 </body>
 </html>
